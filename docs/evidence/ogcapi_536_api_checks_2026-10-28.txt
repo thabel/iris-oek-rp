@@ -1,0 +1,16 @@
+# Requests documented in https://www.geoportal.rlp.de/spatial-objects/536/api, layer ms:oek_f — checked 2026-10-28T21:02Z
+# columns: HTTP status | bytes | seconds | path   (next line: first 200 chars of the body)
+200 | 53 | 96.948583 | /conformance?f=json
+    URI not valid! {wfsid}/collection or {wfsid}/api<br/>
+500 | 0 | 7.606811 | /collections/ms:oek_f/items?f=json&limit=1&resultType=hits
+    
+500 | 0 | 6.250896 | /collections/ms:oek_f/items?f=html&limit=1
+    
+500 | 0 | 12.763307 | /collections/ms:oek_f/items?f=json&limit=1&bbox=7.5,50.3,7.7,50.4
+    
+200 | 761 | 24.404246 | /collections/ms:oek_f/items/1?f=json
+    {"serviceTitle":"Kompensationsverzeichnis WFS","collectionId":"3008","collectionName":"ms:oek_f","collectionTitle":"Oekokonto OEK Flaechen","links":[{"href":"https:\/\/www.geoportal.rlp.de\/spatial-ob
+200 | 779 | 0.655485 | /collections/ms:oek_f/items/oek_f.1?f=json
+    {"serviceTitle":"Kompensationsverzeichnis WFS","collectionId":"3008","collectionName":"ms:oek_f","collectionTitle":"Oekokonto OEK Flaechen","links":[{"href":"https:\/\/www.geoportal.rlp.de\/spatial-ob
+200 | 290 | 36.676881 | /collections/ms:oek_f/items/1?f=xml
+    <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL was not found on this server.</p><hr><address>Apach
