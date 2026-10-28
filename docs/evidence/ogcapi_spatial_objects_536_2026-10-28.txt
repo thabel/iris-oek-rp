@@ -1,0 +1,7 @@
+# OGC API Features proxy of geoportal.rlp.de for WFS 536 — checked 2026-10-28T20:55Z
+# columns: HTTP status | content type | bytes | seconds | URL
+200 | application/json | 7755 | 0.938770 | https://www.geoportal.rlp.de/spatial-objects/536?f=json
+200 | application/json | 7755 | 2.190346 | https://www.geoportal.rlp.de/spatial-objects/536/collections?f=json
+500 | text/html; charset=UTF-8 | 0 | 3.076059 | https://www.geoportal.rlp.de/spatial-objects/536/collections/ms:oek_f?f=json
+500 | text/html; charset=UTF-8 | 0 | 1.949768 | https://www.geoportal.rlp.de/spatial-objects/536/collections/ms:oek_f/items?f=json&limit=1
+500 | text/html; charset=UTF-8 | 0 | 0.533378 | https://www.geoportal.rlp.de/spatial-objects/536/collections/ms:kom_f/items?f=json&limit=1

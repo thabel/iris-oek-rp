@@ -2,7 +2,7 @@
 
 IRIS task **056 / IRIS-OEK-RP**. A reproducible harvester that reads registered eco-account (Ökokonto) offsetting sites for Rhineland-Palatinate from an OGC WFS and loads them into `iris_staging.compensation_sites` in PostGIS.
 
-> **Status: fixture-based demonstrator.** The endpoint and layer named in the brief do not exist (no DNS record; no `rp_oekokonto` layer). The service that is registered for this data (SGD Nord LANIS *Kompensationsverzeichnis WFS*, layer `ms:oek_f`) returned HTTP 404 on 2026-10-27, and its geoportal proxy is access-controlled. The live code path is implemented and configured, but every demonstrated result comes from fixtures. See [docs/discovery.md](docs/discovery.md) for the evidence.
+> **Status: fixture-based demonstrator.** The endpoint and layer named in the brief do not exist (no DNS record; no `rp_oekokonto` layer). The service that is registered for this data (SGD Nord LANIS *Kompensationsverzeichnis WFS*, layer `ms:oek_f`) returned HTTP 404 on 2026-10-27. Its geoportal WFS proxy is access-controlled, and the geoportal's OGC API – Features proxy returned HTTP 500 for every feature request on 2026-10-28. The live code path is implemented and configured, but every demonstrated result comes from fixtures. See [docs/discovery.md](docs/discovery.md) for the evidence.
 
 ## Contents
 

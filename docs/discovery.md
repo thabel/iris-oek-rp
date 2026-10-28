@@ -36,8 +36,11 @@ A newer dataset record, **"Ökokonten OEK"** (uuid `d8c45a2a-5bd0-5c66-94e3-1fbc
 | Registered URL `…?mapfile=komon&SERVICE=WFS&REQUEST=GetCapabilities&VERSION=2.0.0` | `301` → `https://geoportal.naturschutz.rlp.de/kartendienste_naturschutz/mod_ogc/wfs_getmap.php?...` → **HTTP 404** (Apache). Evidence: `evidence/live_discover_2026-10-27.json`. |
 | Geoportal proxy `https://www.geoportal.rlp.de/registry/wfs/536?REQUEST=GetCapabilities` | Routed through the geoportal's `http_auth` gateway; returns `<error>http_auth/index.php: Cannot parse Metadata XML!</error>`. The catalogue marks the service `hasConstraints: true`. |
 | WMS of the same register (geoportal id 3082, updated 2026-09-17) | Registered at the same `geodaten.naturschutz.rlp.de` origin, so it lands on the same 404. |
+| Geoportal **OGC API – Features** proxy `https://www.geoportal.rlp.de/spatial-objects/536` (labelled "experimental"; checked 2026-10-28) | Service and collection listings work (HTTP 200) and list all 8 layers, including `ms:oek_f`. Every request for a layer's details or **features returns HTTP 500 with an empty body**: `ms:oek_f/items?f=json&limit=1` and `ms:kom_f/items` alike, from the candidate's network and from an independent server. The proxy's own description names the dead origin as its source (`"accessUrl": "https://geodaten.naturschutz.rlp.de/...?mapfile=komon&"`), so it fails for the same reason. Evidence: `evidence/ogcapi_spatial_objects_536_2026-10-28.txt`, `evidence/ogcapi_536_collections_2026-10-28.json`. |
 
-**Conclusion.** There is no working, openly published WFS for the RLP eco-account layer today. In line with the brief ("do not bypass restrictions"), the harvester does not try undocumented URLs, the authenticated proxy or the KSP web app. Instead:
+The geoportal's address without `www` (`https://geoportal.rlp.de/`) fails with a TLS certificate name mismatch; use `https://www.geoportal.rlp.de/`.
+
+**Conclusion.** There is no working, openly published WFS or OGC API endpoint for the RLP eco-account layer today. In line with the brief ("do not bypass restrictions"), the harvester does not try undocumented URLs, the authenticated proxy or the KSP web app. Instead:
 
 * The live code path is fully implemented and configured for the registered endpoint and layer. `oek-harvester discover --config config.example.toml` reports the 404 and makes no further requests.
 * A fixture-based demonstrator exercises the same discovery, paging, parsing and loading code. Where the real service could be checked, the fixtures copy it (layer names, CRS list, licence, provider, MapServer-style WFS 2.0 responses with northing-first coordinates for the GK URN).
@@ -50,6 +53,8 @@ A newer dataset record, **"Ökokonten OEK"** (uuid `d8c45a2a-5bd0-5c66-94e3-1fbc
 * Paging support (`ImplementsResultPaging`) and `CountDefault` on the live service. The harvester reads both from capabilities and also handles services without paging.
 
 ## 5. How to unblock live access
+
+If SGD Nord restores the origin, the OGC API proxy above (GeoJSON, `limit` restricted to 1, 5, 10, 20, 50, 100, 200, 500, 1000–4000) would likely work again and could be added as a second transport. The WFS path below remains the primary one.
 
 Ask the KSP-Servicestelle (SGD Nord) for the current WFS URL of the Kompensationsverzeichnis, or for access to the protected geoportal proxy. Then:
 

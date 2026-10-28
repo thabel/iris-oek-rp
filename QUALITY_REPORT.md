@@ -10,6 +10,7 @@
 | The brief's layer `rp_oekokonto` is not advertised anywhere; the eco-account layer is `ms:oek_f` | corrected in config | geoportal.rlp.de feature type 3008 |
 | The registered WFS (geoportal id 536) redirects to a host that returns HTTP 404 | blocking | `docs/evidence/live_discover_2026-10-27.json` |
 | The geoportal proxy for the WFS sits behind `http_auth` (`hasConstraints: true`) | not bypassed | `docs/discovery.md` §3 |
+| The geoportal's OGC API – Features proxy (`/spatial-objects/536`) lists `ms:oek_f`, but every feature request returns HTTP 500 because it forwards to the same dead origin | blocking | `docs/evidence/ogcapi_spatial_objects_536_2026-10-28.txt` |
 | The service offers no EPSG:25832 (31466/31467/3857/4326 only) | handled: reprojection | `docs/discovery.md` §2 |
 | Without the BETA2007 grid, DHDN→ETRS89 uses Helmert with ~3 m accuracy | warning `datum_grid_unavailable`; the Docker image installs the grid | `run_report.json` → `transformation` |
 
