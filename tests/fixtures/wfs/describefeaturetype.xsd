@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SYNTHETIC schema for tests; the real ms:oek_f schema was not retrievable. -->
+<schema targetNamespace="http://mapserver.gis.umn.edu/mapserver"
+        xmlns:ms="http://mapserver.gis.umn.edu/mapserver"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:gml="http://www.opengis.net/gml/3.2"
+        elementFormDefault="qualified" version="0.1">
+  <import namespace="http://www.opengis.net/gml/3.2"
+          schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+  <element name="oek_f" type="ms:oek_fType" substitutionGroup="gml:AbstractFeature"/>
+  <complexType name="oek_fType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+        <element name="geom" type="gml:GeometryPropertyType" minOccurs="0" maxOccurs="1"/>
+        <element name="oek_id" minOccurs="0" maxOccurs="1" type="string" nillable="true"/>
+        <element name="oek_name" minOccurs="0" maxOccurs="1" type="string" nillable="true"/>
+        <element name="gemeinde" minOccurs="0" maxOccurs="1" type="string" nillable="true"/>
+        <element name="gemeinde_schluessel" minOccurs="0" maxOccurs="1" type="string" nillable="true"/>
+        <element name="gemarkung" minOccurs="0" maxOccurs="1" type="string" nillable="true"/>
+        <element name="gemarkung_nr" minOccurs="0" maxOccurs="1" type="string" nillable="true"/>
+        <element name="flurstuecke" minOccurs="0" maxOccurs="1" type="string" nillable="true"/>
+        <element name="status" minOccurs="0" maxOccurs="1" type="string" nillable="true"/>
+        <element name="flaeche_m2" minOccurs="0" maxOccurs="1" type="string" nillable="true"/>
+        <element name="oekopunkte_gesamt" minOccurs="0" maxOccurs="1" type="string" nillable="true"/>
+        <element name="oekopunkte_abgebucht" minOccurs="0" maxOccurs="1" type="string" nillable="true"/>
+        <element name="oekopunkte_verfuegbar" minOccurs="0" maxOccurs="1" type="string" nillable="true"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+</schema>

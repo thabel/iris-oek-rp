@@ -1,0 +1,21 @@
+{
+  "mode": "live",
+  "endpoint": "https://geodaten-wasser.rlp.de/wfs/kompensation",
+  "error": "Request failed: HTTPSConnectionPool(host='geodaten-wasser.rlp.de', port=443): Max retries exceeded with url: /wfs/kompensation?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities (Caused by NameResolutionError(\"HTTPSConnection(host='geodaten-wasser.rlp.de', port=443): Failed to resolve 'geodaten-wasser.rlp.de' ([Errno 11001] getaddrinfo failed)\"))",
+  "requests": [
+    {
+      "url": "https://geodaten-wasser.rlp.de/wfs/kompensation?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities",
+      "status": null,
+      "bytes": 0,
+      "elapsed_s": 0.015000000013969839,
+      "error": "ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\\'geodaten-wasser.rlp.de\\', port=443): Max retries exceeded with url: /wfs/kompensation?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities (Caused by NameResolutionError(\"HTTPSConnection(host=\\'geodaten-wasser.rlp.de\\', port=443): Failed to resolve \\'geodaten-wasser.rlp.de\\' ([Errno 11001] getaddrinfo failed)\"))'))"
+    },
+    {
+      "url": "https://geodaten-wasser.rlp.de/wfs/kompensation?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities",
+      "status": null,
+      "bytes": 0,
+      "elapsed_s": 0.0,
+      "error": "ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\\'geodaten-wasser.rlp.de\\', port=443): Max retries exceeded with url: /wfs/kompensation?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities (Caused by NameResolutionError(\"HTTPSConnection(host=\\'geodaten-wasser.rlp.de\\', port=443): Failed to resolve \\'geodaten-wasser.rlp.de\\' ([Errno 11001] getaddrinfo failed)\"))'))"
+    }
+  ]
+}

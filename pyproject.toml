@@ -1,0 +1,38 @@
+[project]
+name = "iris-oek-rp"
+version = "0.1.0"
+description = "Rhineland-Palatinate eco-account (Oekokonto) WFS harvester for iris_staging.compensation_sites"
+readme = "README.md"
+requires-python = ">=3.11"
+# Direct dependencies are pinned exactly; requirements.txt pins the full
+# resolved set (including transitive packages) for reproducible installs.
+dependencies = [
+    "geopandas==1.1.1",
+    "lxml==6.0.2",
+    "psycopg[binary]==3.2.10",
+    "pyproj==3.7.2",
+    "requests==2.32.5",
+    "shapely==2.1.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.4.2",
+]
+
+[project.scripts]
+oek-harvester = "oek_harvester.cli:main"
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+oek_harvester = ["sql/*.sql"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

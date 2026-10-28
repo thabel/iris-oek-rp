@@ -1,0 +1,68 @@
+# Example configuration for a LIVE harvest. Copy to config.toml and adjust.
+# No secrets here: the database URL is read from the environment variable
+# named in [database].url_env.
+
+[harvest]
+state_code = "RP"
+site_id_prefix = "OEK-"
+output_dir = "output/live"
+
+[source]
+name = "LANIS Kompensationsverzeichnis RLP - Oekokonto OEK"
+provider = "Struktur- und Genehmigungsdirektion Nord - LANIS-Zentrale"
+# Registered endpoint of geoportal.rlp.de WFS id 536. On 2026-10-27 it
+# redirected to geoportal.naturschutz.rlp.de and returned HTTP 404; see
+# docs/discovery.md. The endpoint named in the brief
+# (https://geodaten-wasser.rlp.de/wfs/kompensation) has no DNS record.
+endpoint = "https://geodaten.naturschutz.rlp.de/kartendienste_naturschutz/mod_ogc/wfs_getmap.php?mapfile=komon"
+# The brief names layer "rp_oekokonto"; the service advertises "ms:oek_f".
+type_name = "ms:oek_f"
+licence = "ODbL-1.0 (Open Data Commons Open Database License)"
+version = "2.0.0"
+# Omit request_crs to request the layer's advertised DefaultCRS (the
+# original CRS is then stored unchanged in geom_source).
+# request_crs = "urn:ogc:def:crs:EPSG::31466"
+page_size = 500
+max_features = 100000
+timeout_s = 60
+max_retries = 3
+backoff_s = 2.0
+request_delay_s = 1.0
+user_agent = "iris-oek-rp-harvester/0.1 (+contact: replace-with-your-email)"
+
+[mapping]
+# Fill these in only after `oek-harvester discover` has shown the real
+# DescribeFeatureType. Unmapped targets stay NULL; every source attribute is
+# still kept verbatim in compensation_sites.source_attributes.
+# source_area_unit = "m2"     # or "ha"; omit if unknown
+# credit_unit = "Oekopunkte"
+decimal_style = "de"
+
+[mapping.fields]
+# Without source_id the WFS gml:id is used as the stable source identifier.
+# source_id = ""
+# site_name = ""
+# municipality_name = ""
+# municipality_code = ""
+# cadastral_district_name = ""
+# cadastral_district_code = ""
+# cadastral_parcel_refs = ""
+# compensation_status = ""
+# source_area = ""
+# credits_total = ""
+# credits_debited = ""
+# credits_available = ""
+
+[mapping.status_values]
+# "<source value>" = "planned" | "active" | "partially_debited" | "fully_debited" | "closed"
+
+[quality]
+max_repair_area_change = 0.01
+min_area_m2 = 1.0
+area_mismatch_tolerance = 0.05
+state_bbox_wgs84 = [6.05, 48.90, 8.55, 51.00]
+municipality_code_prefix = "07"
+
+[database]
+url_env = "IRIS_DATABASE_URL"
+schema = "iris_staging"

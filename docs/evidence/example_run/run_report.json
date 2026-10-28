@@ -1,0 +1,145 @@
+{
+  "run_id": "d1ce6839-961d-4c05-b0ac-c2fe585ccd01",
+  "mode": "fixture",
+  "status": "succeeded",
+  "started_at": "2026-10-27T22:00:22+00:00",
+  "finished_at": "2026-10-27T22:00:22+00:00",
+  "error": null,
+  "source": {
+    "name": "LANIS Kompensationsverzeichnis RLP - Oekokonto OEK (fixture)",
+    "endpoint": "https://geodaten.naturschutz.rlp.de/kartendienste_naturschutz/mod_ogc/wfs_getmap.php?mapfile=komon",
+    "layer": "ms:oek_f",
+    "licence": "ODbL-1.0 (Open Data Commons Open Database License)",
+    "provider": "Struktur- und Genehmigungsdirektion Nord - LANIS-Zentrale"
+  },
+  "target": "iris_staging.compensation_sites",
+  "state_code": "RP",
+  "discovery": {
+    "service_title": "Kompensationsverzeichnis WFS",
+    "provider": "Struktur- und Genehmigungsdirektion Nord - LANIS-Zentrale",
+    "fees": "keine",
+    "access_constraints": "Open Data Commons Open Database License (ODbL)",
+    "wfs_version": "2.0.0",
+    "implements_result_paging": true,
+    "count_default": 5000,
+    "layer": "ms:oek_f",
+    "request_crs": "urn:ogc:def:crs:EPSG::31466",
+    "number_matched": 13,
+    "schema_attributes": {
+      "geom": "gml:GeometryPropertyType",
+      "oek_id": "string",
+      "oek_name": "string",
+      "gemeinde": "string",
+      "gemeinde_schluessel": "string",
+      "gemarkung": "string",
+      "gemarkung_nr": "string",
+      "flurstuecke": "string",
+      "status": "string",
+      "flaeche_m2": "string",
+      "oekopunkte_gesamt": "string",
+      "oekopunkte_abgebucht": "string",
+      "oekopunkte_verfuegbar": "string"
+    },
+    "geometry_property": "geom",
+    "attribute_mapping": {
+      "source_id": "oek_id (string)",
+      "site_name": "oek_name (string)",
+      "municipality_name": "gemeinde (string)",
+      "municipality_code": "gemeinde_schluessel (string)",
+      "cadastral_district_name": "gemarkung (string)",
+      "cadastral_district_code": "gemarkung_nr (string)",
+      "cadastral_parcel_refs": "flurstuecke (string)",
+      "compensation_status": "status (string)",
+      "source_area": "flaeche_m2 (string)",
+      "credits_total": "oekopunkte_gesamt (string)",
+      "credits_debited": "oekopunkte_abgebucht (string)",
+      "credits_available": "oekopunkte_verfuegbar (string)"
+    }
+  },
+  "transformation": {
+    "source_srid": 31466,
+    "target_srid": 25832,
+    "operation": "axis order change (2D) + Inverse of 3-degree Gauss-Kruger zone 2 + DHDN to ETRS89 (8) + UTM zone 32N",
+    "accuracy_m": 0.9,
+    "better_operations_unavailable": []
+  },
+  "counts": {
+    "pages": 3,
+    "number_matched": 13,
+    "features_received": 13,
+    "duplicates_in_source": 1,
+    "accepted_valid": 5,
+    "accepted_repaired": 1,
+    "rejected_repair_changes_area": 1,
+    "rejected_missing_geometry": 1,
+    "rejected_non_polygon_geometry": 1,
+    "rejected_outside_state_extent": 1,
+    "rejected_tiny_area": 1,
+    "rejected_missing_source_id": 1,
+    "accepted_total": 6,
+    "rejected_total": 6,
+    "db_inserted": 0,
+    "db_updated": 0,
+    "db_unchanged": 6,
+    "db_existing_not_seen_this_run": 0
+  },
+  "issue_counts": {
+    "warning:geometry_repaired": 1,
+    "reject:repair_changes_area": 1,
+    "reject:missing_geometry": 1,
+    "reject:non_polygon_geometry": 1,
+    "reject:outside_state_extent": 1,
+    "warning:unmapped_status": 1,
+    "warning:unparseable_number": 2,
+    "warning:missing_status": 1,
+    "warning:missing_municipality": 1,
+    "reject:tiny_area": 1,
+    "warning:duplicate_in_source": 1,
+    "warning:area_mismatch": 1,
+    "reject:missing_source_id": 1
+  },
+  "requests": [
+    {
+      "url": "fixture://tests/fixtures/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities",
+      "status": 200,
+      "bytes": 4391,
+      "elapsed_s": 0.0,
+      "error": null
+    },
+    {
+      "url": "fixture://tests/fixtures/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=DescribeFeatureType&TYPENAMES=ms:oek_f",
+      "status": 200,
+      "bytes": 2112,
+      "elapsed_s": 0.0,
+      "error": null
+    },
+    {
+      "url": "fixture://tests/fixtures/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=ms:oek_f&RESULTTYPE=hits",
+      "status": 200,
+      "bytes": 326,
+      "elapsed_s": 0.0,
+      "error": null
+    },
+    {
+      "url": "fixture://tests/fixtures/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=ms:oek_f&SRSNAME=urn:ogc:def:crs:EPSG::31466&STARTINDEX=0&COUNT=5",
+      "status": 200,
+      "bytes": 4564,
+      "elapsed_s": 0.0,
+      "error": null
+    },
+    {
+      "url": "fixture://tests/fixtures/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=ms:oek_f&SRSNAME=urn:ogc:def:crs:EPSG::31466&STARTINDEX=5&COUNT=5",
+      "status": 200,
+      "bytes": 3446,
+      "elapsed_s": 0.0,
+      "error": null
+    },
+    {
+      "url": "fixture://tests/fixtures/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=ms:oek_f&SRSNAME=urn:ogc:def:crs:EPSG::31466&STARTINDEX=10&COUNT=5",
+      "status": 200,
+      "bytes": 3548,
+      "elapsed_s": 0.0,
+      "error": null
+    }
+  ]
+}

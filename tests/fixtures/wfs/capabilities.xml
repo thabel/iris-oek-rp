@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fixture modelled on the registered RLP Kompensationsverzeichnis WFS (geoportal.rlp.de id 536). -->
+<wfs:WFS_Capabilities xmlns:wfs="http://www.opengis.net/wfs/2.0"
+    xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:fes="http://www.opengis.net/fes/2.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.opengis.net/wfs/2.0" version="2.0.0">
+  <ows:ServiceIdentification>
+    <ows:Title>Kompensationsverzeichnis WFS</ows:Title>
+    <ows:Abstract>Ebenen aus dem Landeskompensationsverzeichnis: KOM EIV OEK EMA MAE</ows:Abstract>
+    <ows:ServiceType codeSpace="OGC">WFS</ows:ServiceType>
+    <ows:ServiceTypeVersion>2.0.0</ows:ServiceTypeVersion>
+    <ows:Fees>keine</ows:Fees>
+    <ows:AccessConstraints>Open Data Commons Open Database License (ODbL)</ows:AccessConstraints>
+  </ows:ServiceIdentification>
+  <ows:ServiceProvider>
+    <ows:ProviderName>Struktur- und Genehmigungsdirektion Nord - LANIS-Zentrale</ows:ProviderName>
+  </ows:ServiceProvider>
+  <ows:OperationsMetadata>
+    <ows:Operation name="GetCapabilities"/>
+    <ows:Operation name="DescribeFeatureType"/>
+    <ows:Operation name="GetFeature">
+      <ows:Parameter name="resultType"><ows:AllowedValues><ows:Value>results</ows:Value><ows:Value>hits</ows:Value></ows:AllowedValues></ows:Parameter>
+      <ows:Parameter name="outputFormat"><ows:AllowedValues>
+        <ows:Value>application/gml+xml; version=3.2</ows:Value>
+        <ows:Value>text/xml; subtype=gml/3.2.1</ows:Value>
+      </ows:AllowedValues></ows:Parameter>
+    </ows:Operation>
+    <ows:Constraint name="ImplementsBasicWFS"><ows:NoValues/><ows:DefaultValue>TRUE</ows:DefaultValue></ows:Constraint>
+    <ows:Constraint name="ImplementsResultPaging"><ows:NoValues/><ows:DefaultValue>TRUE</ows:DefaultValue></ows:Constraint>
+    <ows:Constraint name="CountDefault"><ows:NoValues/><ows:DefaultValue>5000</ows:DefaultValue></ows:Constraint>
+  </ows:OperationsMetadata>
+  <FeatureTypeList>
+    <FeatureType>
+      <Name>ms:eiv_f</Name>
+      <Title>Eingriffsvorgang EIV Flaechen</Title>
+      <DefaultCRS>urn:ogc:def:crs:EPSG::31466</DefaultCRS>
+      <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+      <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+      <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+      <ows:WGS84BoundingBox dimensions="2">
+        <ows:LowerCorner>6.0597466992742 48.9343735165295</ows:LowerCorner>
+        <ows:UpperCorner>8.51290772937881 50.9474521355781</ows:UpperCorner>
+      </ows:WGS84BoundingBox>
+    </FeatureType>
+    <FeatureType>
+      <Name>ms:kom_f</Name>
+      <Title>Kompensationsmassnahmen KOM Flaechen</Title>
+      <DefaultCRS>urn:ogc:def:crs:EPSG::31466</DefaultCRS>
+      <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+      <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+      <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+      <ows:WGS84BoundingBox dimensions="2">
+        <ows:LowerCorner>6.0597466992742 48.9343735165295</ows:LowerCorner>
+        <ows:UpperCorner>8.51290772937881 50.9474521355781</ows:UpperCorner>
+      </ows:WGS84BoundingBox>
+    </FeatureType>
+    <FeatureType>
+      <Name>ms:ema_f</Name>
+      <Title>Massnahmen aus Ersatzzahlung EMA Flaechen nach altem Recht</Title>
+      <DefaultCRS>urn:ogc:def:crs:EPSG::31466</DefaultCRS>
+      <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+      <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+      <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+      <ows:WGS84BoundingBox dimensions="2">
+        <ows:LowerCorner>6.0597466992742 48.9343735165295</ows:LowerCorner>
+        <ows:UpperCorner>8.51290772937881 50.9474521355781</ows:UpperCorner>
+      </ows:WGS84BoundingBox>
+    </FeatureType>
+    <FeatureType>
+      <Name>ms:oek_f</Name>
+      <Title>Oekokonto OEK Flaechen</Title>
+      <DefaultCRS>urn:ogc:def:crs:EPSG::31466</DefaultCRS>
+      <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+      <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+      <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+      <ows:WGS84BoundingBox dimensions="2">
+        <ows:LowerCorner>6.0597466992742 48.9343735165295</ows:LowerCorner>
+        <ows:UpperCorner>8.51290772937881 50.9474521355781</ows:UpperCorner>
+      </ows:WGS84BoundingBox>
+    </FeatureType>
+  </FeatureTypeList>
+</wfs:WFS_Capabilities>

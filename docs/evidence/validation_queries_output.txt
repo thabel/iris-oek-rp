@@ -1,0 +1,65 @@
+ state_code | site_id | count 
+------------+---------+-------
+(0 rows)
+
+ state_code | source_layer |                   source_licence                   | sites | all_valid | working_srid | source_srids | source_crs_kept |   geom_types   
+------------+--------------+----------------------------------------------------+-------+-----------+--------------+--------------+-----------------+----------------
+ RP         | ms:oek_f     | ODbL-1.0 (Open Data Commons Open Database License) |     6 | t         |        25832 | {31466}      | t               | {MULTIPOLYGON}
+(1 row)
+
+ site_id  | area_m2 | postgis_geography_m2 | planar_25832_m2 
+----------+---------+----------------------+-----------------
+ OEK-1001 |  9999.6 |               9999.6 |          9998.6
+ OEK-1002 |  7197.8 |               7197.8 |          7193.8
+ OEK-1003 |  9994.1 |               9994.1 |          9986.8
+ OEK-1008 |  9995.6 |               9995.6 |          9989.2
+ OEK-1009 |  9997.9 |               9997.9 |          9993.6
+ OEK-1011 |  9592.7 |               9592.7 |          9585.4
+(6 rows)
+
+ compensation_status | sites |        raw_values         
+---------------------+-------+---------------------------
+ active              |     2 | {eingerichtet}
+ fully_debited       |     1 | {"vollständig abgebucht"}
+ partially_debited   |     1 | {"Teilweise abgebucht"}
+ unknown             |     1 | {NULL}
+ unmapped            |     1 | {"in Prüfung"}
+(5 rows)
+
+               flag               | sites 
+----------------------------------+-------
+ missing_credits_available        |     2
+ area_mismatch                    |     1
+ dropped_z                        |     1
+ missing_credits_debited          |     1
+ missing_credits_total            |     1
+ missing_municipality             |     1
+ missing_status                   |     1
+ multipart                        |     1
+ repaired:Self-intersection       |     1
+ unmapped_status                  |     1
+ unparseable_number:credits_total |     1
+ unparseable_number:source_area   |     1
+(12 rows)
+
+                run_id                |  mode   |  status   |          started_at           | received | accepted | rejected | inserted | updated | unchanged 
+--------------------------------------+---------+-----------+-------------------------------+----------+----------+----------+----------+---------+-----------
+ d1ce6839-961d-4c05-b0ac-c2fe585ccd01 | fixture | succeeded | 2026-10-27 22:00:22.587506+00 | 13       | 6        | 6        | 0        | 0       | 6
+ 3c44fb57-2a82-4410-8a6c-6ff83df7ee08 | fixture | succeeded | 2026-10-27 22:00:14.275903+00 | 13       | 6        | 6        | 6        | 0       | 0
+(2 rows)
+
+         code         | source_feature_id |                                                               message                                                               
+----------------------+-------------------+-------------------------------------------------------------------------------------------------------------------------------------
+ missing_geometry     | 1005              | 
+ missing_source_id    | oek_f.noid12      | No stable source identifier; a key derived from geometry or attributes would not survive source edits, so the feature is not loaded
+ non_polygon_geometry | 1006              | Point
+ outside_state_extent | 1007              | representative point outside state bounding box
+ repair_changes_area  | 1004              | Self-intersection[2628459.896 5479680.002]; digitised ring area is 0
+ tiny_area            | 1010              | 0.500 m2 < 1.0 m2
+(6 rows)
+
+ site_id  |        site_name         | municipality_name | compensation_status | credits_available | area_m2 | distance_km 
+----------+--------------------------+-------------------+---------------------+-------------------+---------+-------------
+ OEK-1002 | Streuobstwiese Moselweiß | Koblenz           | partially_debited   |           33000.5 |    7198 |        0.80
+(1 row)
+

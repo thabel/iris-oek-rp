@@ -1,0 +1,58 @@
+# Configuration for the fixture-based demonstrator and the test suite.
+# The attribute mapping below matches the SYNTHETIC fixture schema
+# (tests/fixtures/wfs/describefeaturetype.xsd), not a verified real schema.
+
+[harvest]
+state_code = "RP"
+site_id_prefix = "OEK-"
+output_dir = "../../output/fixture"
+
+[source]
+name = "LANIS Kompensationsverzeichnis RLP - Oekokonto OEK (fixture)"
+provider = "Struktur- und Genehmigungsdirektion Nord - LANIS-Zentrale"
+endpoint = "https://geodaten.naturschutz.rlp.de/kartendienste_naturschutz/mod_ogc/wfs_getmap.php?mapfile=komon"
+type_name = "ms:oek_f"
+licence = "ODbL-1.0 (Open Data Commons Open Database License)"
+version = "2.0.0"
+page_size = 5
+max_features = 1000
+request_delay_s = 0
+
+[mapping]
+source_area_unit = "m2"
+credit_unit = "Oekopunkte"
+decimal_style = "de"
+
+[mapping.fields]
+source_id = "oek_id"
+site_name = "oek_name"
+municipality_name = "gemeinde"
+municipality_code = "gemeinde_schluessel"
+cadastral_district_name = "gemarkung"
+cadastral_district_code = "gemarkung_nr"
+cadastral_parcel_refs = "flurstuecke"
+compensation_status = "status"
+source_area = "flaeche_m2"
+credits_total = "oekopunkte_gesamt"
+credits_debited = "oekopunkte_abgebucht"
+credits_available = "oekopunkte_verfuegbar"
+
+# Source values (compared case-insensitively) -> controlled vocabulary.
+# Values not listed are loaded as 'unmapped' and reported, never guessed.
+[mapping.status_values]
+"geplant" = "planned"
+"eingerichtet" = "active"
+"teilweise abgebucht" = "partially_debited"
+"vollständig abgebucht" = "fully_debited"
+"aufgelöst" = "closed"
+
+[quality]
+max_repair_area_change = 0.01
+min_area_m2 = 1.0
+area_mismatch_tolerance = 0.05
+state_bbox_wgs84 = [6.05, 48.90, 8.55, 51.00]
+municipality_code_prefix = "07"
+
+[database]
+url_env = "IRIS_DATABASE_URL"
+schema = "iris_staging"

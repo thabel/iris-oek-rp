@@ -1,0 +1,14 @@
+{
+  "mode": "live",
+  "endpoint": "https://geodaten.naturschutz.rlp.de/kartendienste_naturschutz/mod_ogc/wfs_getmap.php?mapfile=komon",
+  "error": "HTTP 404 for https://geoportal.naturschutz.rlp.de/kartendienste_naturschutz/mod_ogc/wfs_getmap.php?mapfile=komon&SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities",
+  "requests": [
+    {
+      "url": "https://geoportal.naturschutz.rlp.de/kartendienste_naturschutz/mod_ogc/wfs_getmap.php?mapfile=komon&SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities",
+      "status": 404,
+      "bytes": 290,
+      "elapsed_s": 2.125,
+      "error": null
+    }
+  ]
+}

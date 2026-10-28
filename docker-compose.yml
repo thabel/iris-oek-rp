@@ -1,0 +1,34 @@
+services:
+  postgis:
+    image: postgis/postgis:17-3.5
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-iris}
+      POSTGRES_USER: ${POSTGRES_USER:-iris}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    ports:
+      - "${POSTGRES_PORT:-5434}:5432"
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+    healthcheck:
+      # Check over TCP: during first-run initialisation the image runs a
+      # temporary server on the Unix socket only, which pg_isready would
+      # otherwise report as ready before the real server accepts connections.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  harvester:
+    build: .
+    depends_on:
+      postgis:
+        condition: service_healthy
+    environment:
+      IRIS_DATABASE_URL: postgresql://${POSTGRES_USER:-iris}:${POSTGRES_PASSWORD}@postgis:5432/${POSTGRES_DB:-iris}
+    volumes:
+      - ./output:/app/output
+    # Default command (see Dockerfile): fixture harvest into iris_staging.
+    # Live discovery:  docker compose run --rm harvester discover --config config.example.toml
+
+volumes:
+  postgis_data:
