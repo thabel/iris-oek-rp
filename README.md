@@ -181,7 +181,7 @@ From the fixture run on 2026-10-27 with `docker compose` (fresh volume, BETA2007
 | duplicates in source | 1 | 1 |
 | db inserted / updated / unchanged | 6 / 0 / 0 | 0 / 0 / 6 |
 
-Output of `sql/validation_queries.sql`: [docs/evidence/validation_queries_output.txt](docs/evidence/validation_queries_output.txt). Full run report: [docs/evidence/example_run/](docs/evidence/example_run/). Quality/error report: [QUALITY_REPORT.md](QUALITY_REPORT.md).
+Output of `sql/validation_queries.sql`: [docs/evidence/validation_queries_output.txt](docs/evidence/validation_queries_output.txt). Full run report: [docs/evidence/example_run/](docs/evidence/example_run/). Quality/error report: [QUALITY_REPORT.md](QUALITY_REPORT.md). Screenshots of every source check and maps of both runs: [docs/discovery.md §7](docs/discovery.md#7-visual-evidence).
 
 ## Assumptions and limitations
 
