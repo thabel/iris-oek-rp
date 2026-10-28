@@ -1,0 +1,12 @@
+    ID  name                                   lon     lat  centroid shift m  area diff
+     1  WSG SCHWEIGEN-RECHTENBACH            7.938  49.075              0.79    0.0002%
+     2  WSG DUDENHOFEN                       8.377  49.322              0.61    0.0002%
+     4  WSG GODRAMSTEIN, BRUNNEN 1 UND 2     8.073  49.216              0.73    0.0002%
+     7  WSG WILGARTSWIESEN                   7.840  49.216              0.82    0.0002%
+     8  WSG BAD DÜRKHEIM, IM HAMMELSTAL      8.108  49.434              0.73    0.0002%
+    12  Feilbingert/Hallgarten               7.786  49.765              0.91    0.0002%
+    14  Rieden/Stadt Mayen                   7.185  50.401              1.31    0.0002%
+    15  Riedwiese                            7.735  49.846              0.95    0.0002%
+
+all 1412 features, lon/lat bounds: 6.37 49.01 8.51 50.92
+largest centroid shift: 1.31 m

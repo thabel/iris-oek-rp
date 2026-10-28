@@ -1,0 +1,115 @@
+{
+  "run_id": null,
+  "mode": "live",
+  "status": "succeeded",
+  "started_at": "2026-10-28T21:47:11+00:00",
+  "finished_at": "2026-10-28T21:47:24+00:00",
+  "error": null,
+  "source": {
+    "name": "Geoportal Wasser RLP - Trinkwasserschutzgebiete (live control run)",
+    "endpoint": "https://geodienste-wasser.rlp-umwelt.de/geoserver/wfs",
+    "layer": "wsg:twsg_rvo",
+    "licence": "CC BY 4.0",
+    "provider": "Wasserwirtschaftsverwaltung Rheinland-Pfalz"
+  },
+  "target": "iris_staging.compensation_sites",
+  "state_code": "RP",
+  "discovery": {
+    "service_title": "Web Feature Service Geoportal Wasser",
+    "provider": "Wasserwirtschaftsverwaltung Rheinland-Pfalz",
+    "fees": "NONE",
+    "access_constraints": "NONE",
+    "wfs_version": "2.0.0",
+    "implements_result_paging": true,
+    "count_default": 1000000,
+    "layer": "wsg:twsg_rvo",
+    "request_crs": "urn:ogc:def:crs:EPSG::31466",
+    "number_matched": 1412,
+    "schema_attributes": {
+      "ID": "xsd:decimal",
+      "WSG_NR": "xsd:decimal",
+      "WSG_BEZ": "xsd:string",
+      "SCHUTZZONE_NR": "xsd:decimal",
+      "SCHUTZZONE_BEZ": "xsd:string",
+      "PRIORITAET": "xsd:decimal",
+      "TYP_NR": "xsd:decimal",
+      "GEOMSTATUS_BEZ": "xsd:string",
+      "ZWECK_NR": "xsd:decimal",
+      "ZWECK_BEZ": "xsd:string",
+      "WVB_NR": "xsd:string",
+      "GEOMETRIE": "gml:GeometryPropertyType"
+    },
+    "geometry_property": "GEOMETRIE",
+    "attribute_mapping": {
+      "source_id": "ID (xsd:decimal)",
+      "site_name": "WSG_BEZ (xsd:string)"
+    }
+  },
+  "transformation": {
+    "source_srid": 31466,
+    "target_srid": 25832,
+    "operation": "axis order change (2D) + Inverse of 3-degree Gauss-Kruger zone 2 + DHDN to ETRS89 (2) + UTM zone 32N",
+    "accuracy_m": 3.0,
+    "better_operations_unavailable": [
+      "Inverse of 3-degree Gauss-Kruger zone 2 + DHDN to ETRS89 (8) + UTM zone 32N"
+    ]
+  },
+  "counts": {
+    "pages": 3,
+    "number_matched": 1412,
+    "features_received": 1412,
+    "duplicates_in_source": 0,
+    "accepted_valid": 1411,
+    "accepted_repaired": 1,
+    "accepted_total": 1412,
+    "rejected_total": 0
+  },
+  "issue_counts": {
+    "warning:geometry_repaired": 1,
+    "warning:datum_grid_unavailable": 1
+  },
+  "requests": [
+    {
+      "url": "https://geodienste-wasser.rlp-umwelt.de/geoserver/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities",
+      "status": 200,
+      "bytes": 176106,
+      "elapsed_s": 0.6569999999992433,
+      "error": null
+    },
+    {
+      "url": "https://geodienste-wasser.rlp-umwelt.de/geoserver/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=DescribeFeatureType&TYPENAMES=wsg%3Atwsg_rvo",
+      "status": 200,
+      "bytes": 2098,
+      "elapsed_s": 0.07800000000133878,
+      "error": null
+    },
+    {
+      "url": "https://geodienste-wasser.rlp-umwelt.de/geoserver/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=wsg%3Atwsg_rvo&RESULTTYPE=hits",
+      "status": 200,
+      "bytes": 730,
+      "elapsed_s": 0.125,
+      "error": null
+    },
+    {
+      "url": "https://geodienste-wasser.rlp-umwelt.de/geoserver/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=wsg%3Atwsg_rvo&SRSNAME=urn%3Aogc%3Adef%3Acrs%3AEPSG%3A%3A31466&STARTINDEX=0&COUNT=500",
+      "status": 200,
+      "bytes": 1403593,
+      "elapsed_s": 3.6719999999986612,
+      "error": null
+    },
+    {
+      "url": "https://geodienste-wasser.rlp-umwelt.de/geoserver/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=wsg%3Atwsg_rvo&SRSNAME=urn%3Aogc%3Adef%3Acrs%3AEPSG%3A%3A31466&STARTINDEX=500&COUNT=500",
+      "status": 200,
+      "bytes": 1379046,
+      "elapsed_s": 2.0,
+      "error": null
+    },
+    {
+      "url": "https://geodienste-wasser.rlp-umwelt.de/geoserver/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=wsg%3Atwsg_rvo&SRSNAME=urn%3Aogc%3Adef%3Acrs%3AEPSG%3A%3A31466&STARTINDEX=1000&COUNT=500",
+      "status": 200,
+      "bytes": 1492726,
+      "elapsed_s": 1.25,
+      "error": null
+    }
+  ]
+}

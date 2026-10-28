@@ -1,0 +1,51 @@
+# LIVE CONTROL RUN — validates the live WFS code path on a working RLP
+# service. This is NOT compensation data: it must only be run with --no-db
+# and never loaded into compensation_sites (wrong domain).
+#
+#   oek-harvester harvest --config config.live-control.toml --no-db
+#   python scripts/live_control_compare.py output/live-control/sample_sites_25832.gpkg
+#
+# Layer: drinking-water protection zones (Trinkwasserschutzgebiete), RLP
+# water administration GeoServer, listed in geoportal.rlp.de as WFS 655.
+# Gauss-Krueger (EPSG:31466) is requested on purpose, so the northing-first
+# axis handling is exercised against a real server.
+
+[harvest]
+state_code = "RP"
+site_id_prefix = "TWSG-"
+output_dir = "output/live-control"
+
+[source]
+name = "Geoportal Wasser RLP - Trinkwasserschutzgebiete (live control run)"
+provider = "Wasserwirtschaftsverwaltung Rheinland-Pfalz"
+endpoint = "https://geodienste-wasser.rlp-umwelt.de/geoserver/wfs"
+type_name = "wsg:twsg_rvo"
+licence = "CC BY 4.0"
+version = "2.0.0"
+request_crs = "urn:ogc:def:crs:EPSG::31466"
+page_size = 500
+max_features = 5000
+timeout_s = 120
+max_retries = 3
+backoff_s = 2.0
+request_delay_s = 1.0
+user_agent = "iris-oek-rp-harvester/0.1 (live control run)"
+
+[mapping]
+decimal_style = "de"
+
+[mapping.fields]
+# Attribute names as returned by this layer's DescribeFeatureType.
+source_id = "ID"
+site_name = "WSG_BEZ"
+
+[quality]
+max_repair_area_change = 0.01
+min_area_m2 = 1.0
+area_mismatch_tolerance = 0.05
+state_bbox_wgs84 = [6.05, 48.90, 8.55, 51.00]
+municipality_code_prefix = "07"
+
+[database]
+url_env = "IRIS_DATABASE_URL"
+schema = "iris_staging"

@@ -69,7 +69,13 @@ Every reject is stored in `iris_staging.harvest_errors` with the full source pro
 | Transactional | A forced mid-load failure leaves the table unchanged and logs `run_failed` (`test_failed_load_rolls_back_and_is_logged`) |
 | Quality issues reported | `harvest_errors` (6 rejects, warnings), `quality_report.md`, `issues.jsonl` per run |
 
-Test suite: **66 passed** (62 unit + 4 PostGIS integration tests against PostGIS 17 / 3.5). The `docker compose` stack was also run end to end from an empty volume: run 1 inserted 6 / run 2 left 6 unchanged, using the BETA2007 grid (operation "DHDN to ETRS89 (8)", 0.9 m). The validation output in `docs/evidence/` comes from that stack.
+Test suite: **67 passed** (63 unit + 4 PostGIS integration tests against PostGIS 17 / 3.5).
+
+**Live control run (2026-10-28).** The unchanged harvester ran against a working RLP WFS: the water GeoServer, layer `wsg:twsg_rvo`, run with `--no-db` because it is not compensation data.
+- It discovered paging and read the real schema.
+- It retrieved 1,412 polygons in 6 requests: 1,411 valid, 1 repaired, 0 rejected.
+- Requested in EPSG:31466 and reprojected, the zones match the server's own EPSG:25832 output within 0.61–1.31 m, with 0.0002 % area difference.
+- Evidence: `docs/evidence/live_control_water_2026-10-28/`. The `docker compose` stack was also run end to end from an empty volume: run 1 inserted 6 / run 2 left 6 unchanged, using the BETA2007 grid (operation "DHDN to ETRS89 (8)", 0.9 m). The validation output in `docs/evidence/` comes from that stack.
 
 ## 6. Defects found and fixed during development
 
@@ -81,6 +87,7 @@ Test suite: **66 passed** (62 unit + 4 PostGIS integration tests against PostGIS
 | With non-autocommit connections a prior query turned `transaction()` into a savepoint, so the failure-path rollback erased the run record | Rollback integration test | Autocommit connection; every write block is its own transaction |
 | "Most accurate operation" would pick a Saarland-only grid (SeTa2016, 0.01 m) once installed and apply it to all of RLP | Inspecting unavailable operations inside the Docker image | Only operations whose area of use covers the whole state extent are eligible; regression test |
 | Compose healthcheck passed during the image's socket-only init phase, so the harvester got "connection refused" | First `docker compose up` on an empty volume | `pg_isready -h 127.0.0.1` (TCP) |
+| A missing status was flagged on every site even when no status field was configured (1412 warnings in one run) | Live control run | Status stays `unknown` without per-site warnings unless the status field is mapped; regression test |
 
 ## 7. Open items before production use
 

@@ -46,14 +46,46 @@ The geoportal's address without `www` (`https://geoportal.rlp.de/`) fails with a
 * The live code path is fully implemented and configured for the registered endpoint and layer. `oek-harvester discover --config config.example.toml` reports the 404 and makes no further requests.
 * A fixture-based demonstrator exercises the same discovery, paging, parsing and loading code. Where the real service could be checked, the fixtures copy it (layer names, CRS list, licence, provider, MapServer-style WFS 2.0 responses with northing-first coordinates for the GK URN).
 
-## 4. What could not be verified
+## 4. Other servers checked, and a live control run
+
+To show which servers do respond, and to test the live code path somewhere real, other RLP and German sources were checked on 2026-10-28:
+
+| Source | Result |
+|---|---|
+| Other LANIS WFS (Schutzgebiete 658, Biotopkartierung 537, Nationalpark 303, WFS Lanis GDI-DE 535) | All registered on the same `geodaten.naturschutz.rlp.de` origin, so the whole LANIS family is unavailable, not only the compensation register. |
+| RLP water administration GeoServer `https://geodienste-wasser.rlp-umwelt.de/geoserver/wfs` (geoportal WFS 655; its name resembles the brief's `geodaten-wasser.rlp.de`) | **Works.** WFS 2.0, Fees NONE, AccessConstraints NONE, `ImplementsResultPaging` TRUE, 96 feature types. **No compensation or eco-account layer**; the only "Oeko…" layers are bathing waters and WFD ecological status. |
+| Sachsen-Anhalt Kompensationsverzeichnis (LAU) | Its catalogue record restricts access to nature conservation authorities, and it is another state, which the brief excludes. Not used. |
+
+So **no openly available source of RLP compensation data exists today**.
+
+**Live control run.** To validate the live path against a real server, the unchanged harvester was pointed at a real RLP polygon layer on the working water GeoServer: `wsg:twsg_rvo`, drinking-water protection zones (CC BY 4.0). It uses `config.live-control.toml` and runs with `--no-db`. This is **not compensation data** and is never loaded into `compensation_sites`; it only proves that the network, discovery, paging, parsing and geometry code works in production conditions. EPSG:31466 (Gauss-Krüger, northing first) was requested on purpose, so the axis-order handling ran against a real server.
+
+| Brief requirement | Live result |
+|---|---|
+| Discover the advertised feature type and pagination options | Layer found; `ImplementsResultPaging` TRUE; `numberMatched` 1412; real DescribeFeatureType read (`ID`, `WSG_NR`, `WSG_BEZ`, … `GEOMETRIE`) |
+| Retrieve polygons and source identifiers with controlled requests | **6 requests in total** (capabilities, schema, hits, 3 pages of 500), 1 s apart; 1412 polygons with their `ID` |
+| Geometry validation and repair | 1411 valid, **1 repaired** (`WSG ORDENSWALD SW Neustadt`, "Ring Self-intersection", within the 1 % area guard), 0 rejected, 0 duplicates |
+| Correct projection, including axis order | Compared with the same server's native EPSG:25832 output for 8 zones: centroid shift 0.61–1.31 m, area difference 0.0002 %. That is consistent with the ~3 m Helmert transformation used locally; a swapped axis would have been thousands of kilometres off. All 1412 zones fall inside 6.37–8.51 E / 49.01–50.92 N. |
+
+Reproduce with:
+
+```bash
+oek-harvester harvest --config config.live-control.toml --no-db
+python scripts/live_control_compare.py output/live-control/sample_sites_25832.gpkg
+```
+
+Evidence: `evidence/live_control_water_2026-10-28/` (run report, quality report, issues, native-CRS comparison).
+
+This run also exposed a defect, now fixed: a missing status was flagged on every site even when no status field was configured (1412 warnings). Status is now `unknown` without per-site warnings unless the status field is mapped.
+
+## 5. What could not be verified
 
 * **The attribute schema of `ms:oek_f`.** DescribeFeatureType is unreachable and the geoportal does not store it. The OGC API's OpenAPI description does not fill the gap: its feature schema is generic GeoJSON (`type`, `id`, `geometry` of type Polygon/MultiPolygon/…, and `properties` declared only as `{"type": "object", "nullable": true}`), with no attribute names for any layer. Its examples are the OGC template's "Buildings in the city of Bonn", and the response descriptions of `/items` and `/items/{featureId}` are swapped, so it is an auto-generated description, not a data model. The fixture schema (`oek_id`, `gemeinde`, `status`, `oekopunkte_*`, …) is **synthetic**. The live config therefore maps no attributes: every source attribute is kept verbatim in `source_attributes` until the real schema has been checked.
 * The service's real status vocabulary, area units and credit (Ökopunkte) fields.
 * Whether MapServer's `gml:id` values for this layer come from a stable database key. The harvester prefers a configured identifier attribute and falls back to `gml:id`.
-* Paging support (`ImplementsResultPaging`) and `CountDefault` on the live service. The harvester reads both from capabilities and also handles services without paging.
+* Paging support (`ImplementsResultPaging`) and `CountDefault` on the live service. The harvester reads both from capabilities and also handles services without paging. Paging itself was verified live on another RLP server (§4).
 
-## 5. How to unblock live access
+## 6. How to unblock live access
 
 If SGD Nord restores the origin, the OGC API proxy above (GeoJSON, `limit` restricted to 1, 5, 10, 20, 50, 100, 200, 500, 1000–4000) would likely work again and could be added as a second transport. The WFS path below remains the primary one.
 

@@ -93,6 +93,14 @@ def test_mapping_to_absent_attribute_is_reported(cfg, fixture_dir):
     assert any(i.code == "mapped_attribute_absent" for i in result.issues)
 
 
+def test_unconfigured_status_is_unknown_without_per_site_warnings(cfg, fixture_dir):
+    fields = {k: v for k, v in cfg.mapping.fields.items() if k != "compensation_status"}
+    bare = replace(cfg, mapping=replace(cfg.mapping, fields=fields))
+    result = run_harvest(bare, FixtureTransport(fixture_dir), mode="fixture", load=False)
+    assert {r.compensation_status for r in result.build.records} == {"unknown"}
+    assert not any(i.code in ("missing_status", "unmapped_status") for i in result.issues)
+
+
 def test_rerun_produces_identical_hashes(cfg, fixture_dir):
     a = run_harvest(cfg, FixtureTransport(fixture_dir), mode="fixture", load=False)
     b = run_harvest(cfg, FixtureTransport(fixture_dir), mode="fixture", load=False)

@@ -133,7 +133,9 @@ def build_record(feature: RawFeature, cfg: Config) -> tuple[SiteRecord | None, l
 
     status, status_issue = normalize_status(_get(feature, cfg, "compensation_status"),
                                             cfg.mapping.status_values)
-    if status_issue:
+    # An unmapped status field is a configuration fact reported once by
+    # discovery, not a per-site data problem.
+    if status_issue and "compensation_status" in cfg.mapping.fields:
         flags.append(status_issue)
         issues.append(Issue("attributes", "warning", status_issue, source_id, site_id,
                             details={"value": _get(feature, cfg, "compensation_status")}))
