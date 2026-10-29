@@ -47,11 +47,15 @@ On Linux, if the container cannot write reports, make the folder writable first:
 |---|---|
 | Register | Landeskompensationsverzeichnis Rheinland-Pfalz (LKompVzVO), KSP/KomOn system |
 | Publisher | Struktur- und Genehmigungsdirektion Nord – LANIS-Zentrale, Koblenz |
-| Service | Kompensationsverzeichnis WFS (geoportal.rlp.de id 536), MapServer, WFS 2.0.0 |
+| Service | Kompensationsverzeichnis WFS (geoportal.rlp.de id 536), WFS 2.0.0; MapServer (inferred from the URL and the `ms:` prefix) |
 | Endpoint (registered) | `https://geodaten.naturschutz.rlp.de/kartendienste_naturschutz/mod_ogc/wfs_getmap.php?mapfile=komon` |
+| **Endpoint status** | ⚠️ **Unreachable.** It redirects to `geoportal.naturschutz.rlp.de`, which answers **HTTP 404**. Checked 2026-10-27, 2026-10-28 and 2026-10-29. The geoportal's proxies return no data either. Evidence: [docs/discovery.md](docs/discovery.md) §3 and §7 |
+| Endpoint named in the brief | `https://geodaten-wasser.rlp.de/wfs/kompensation`, layer `rp_oekokonto`: the host has **no DNS record** and the layer is not advertised by any RLP service. Replaced by the registered service above. |
 | Layer | `ms:oek_f` — *Oekokonto OEK Flaechen* (polygons) |
-| Native CRS | EPSG:31466 (DHDN / Gauss-Krüger zone 2), also 31467, 3857, 4326 |
+| Advertised CRS | EPSG:31466 (DHDN / Gauss-Krüger zone 2), 31467, 3857, 4326. The registry lists 31466 first; the live default could not be confirmed. |
 | Licence | ODbL 1.0. Downstream use must attribute the source and share derived databases alike. |
+
+Because the endpoint is down, every loaded result comes from fixtures. The harvester stays configured for the registered endpoint (`config.example.toml`), so it works unchanged once the service is restored or a new URL is provided; only the attribute mapping then needs to be filled in.
 
 Every stored row carries `source_name`, `source_endpoint`, `source_layer`, `source_licence`, `source_feature_id`, `gml_id`, the original geometry and CRS (`geom_source`, `source_srid`), all original attributes (`source_attributes`), and the run that first and last saw it.
 
