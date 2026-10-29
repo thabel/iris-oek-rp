@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harvest report — ms:oek_f (RP)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root { --ink:#1f2328; --muted:#59636e; --line:#d1d9e0; --bg:#f6f8fa; --ok:#1a7f37; --bad:#cf222e;
+          --valid:#2ca02c; --repaired:#1f77b4; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:#fff; }
+  main { max-width:1100px; margin:0 auto; padding:24px 16px 48px; }
+  h1 { font-size:24px; margin:0 0 4px; } h2 { font-size:18px; margin:32px 0 10px; }
+  .muted { color:var(--muted); } code { background:var(--bg); padding:1px 5px; border-radius:4px; }
+  .badge { display:inline-block; padding:2px 10px; border-radius:12px; color:#fff; font-weight:600; font-size:13px; }
+  .badge.ok { background:var(--ok); } .badge.bad { background:var(--bad); }
+  .notice { background:#fff8c5; border:1px solid #e6d36b; padding:10px 14px; border-radius:6px; margin:14px 0; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-top:16px; }
+  .card { border:1px solid var(--line); border-radius:8px; padding:12px 14px; background:var(--bg); }
+  .card .label { color:var(--muted); font-size:13px; } .card .value { font-size:28px; font-weight:700; }
+  .card .sub { color:var(--muted); font-size:12px; }
+  ol.steps { list-style:none; padding:0; margin:0; }
+  ol.steps li { padding:6px 0; border-bottom:1px solid var(--line); }
+  .tick { display:inline-block; width:22px; font-weight:700; } li.ok .tick { color:var(--ok); } li.bad .tick { color:var(--bad); }
+  #map { height:460px; border:1px solid var(--line); border-radius:8px; }
+  .legend span { display:inline-block; width:12px; height:12px; border-radius:2px; margin:0 4px 0 12px; vertical-align:-1px; }
+  .scroll { overflow-x:auto; max-height:420px; overflow-y:auto; border:1px solid var(--line); border-radius:8px; }
+  table { border-collapse:collapse; width:100%; font-size:14px; }
+  th, td { text-align:left; padding:6px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { background:var(--bg); position:sticky; top:0; }
+  footer { margin-top:40px; color:var(--muted); font-size:13px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Harvest report — ms:oek_f (RP)</h1>
+  <div class="muted">LANIS Kompensationsverzeichnis RLP - Oekokonto OEK (fixture) · mode <b>fixture</b> ·
+    2026-10-29T11:40:30+00:00 → 2026-10-29T11:40:30+00:00 UTC ·
+    <span class="badge ok">succeeded</span></div>
+  
+  <div class="notice">Mode <b>fixture</b>: the features are synthetic test data served by a local fake WFS. See tests/fixtures/make_fixtures.py.</div>
+
+  <div class="cards"><div class="card"><div class="label">Features received</div><div class="value">13</div><div class="sub"></div></div><div class="card"><div class="label">Accepted</div><div class="value">6</div><div class="sub">5 valid · 1 repaired</div></div><div class="card"><div class="label">Rejected</div><div class="value">6</div><div class="sub">see the table below</div></div><div class="card"><div class="label">Duplicates in source</div><div class="value">1</div><div class="sub">first copy kept</div></div><div class="card"><div class="label">Database</div><div class="value">6</div><div class="sub">0 added · 0 updated · 6 unchanged</div></div></div>
+
+  <h2>What the harvester did</h2>
+  <ol class="steps"><li class="ok"><span class="tick">✔</span>Read the service capabilities (layers, coordinate systems, paging options) <span class="muted">— HTTP 200, 4,690 bytes, 0.0 s</span></li><li class="ok"><span class="tick">✔</span>Read the layer&#x27;s attribute schema <span class="muted">— HTTP 200, 2,112 bytes, 0.0 s</span></li><li class="ok"><span class="tick">✔</span>Asked how many features the layer holds <span class="muted">— HTTP 200, 326 bytes, 0.0 s</span></li><li class="ok"><span class="tick">✔</span>Downloaded page 1 (start at feature 0, up to 5) <span class="muted">— HTTP 200, 4,564 bytes, 0.0 s</span></li><li class="ok"><span class="tick">✔</span>Downloaded page 2 (start at feature 5, up to 5) <span class="muted">— HTTP 200, 3,446 bytes, 0.0 s</span></li><li class="ok"><span class="tick">✔</span>Downloaded page 3 (start at feature 10, up to 5) <span class="muted">— HTTP 200, 3,548 bytes, 0.0 s</span></li><li class="ok"><span class="tick">✔</span>Checked every feature: identifier, geometry (validate, repair if defensible), state membership, attribute normalisation <span class="muted">— projected with “axis order change (2D) + Inverse of 3-degree Gauss-Kruger zone 2 + DHDN to ETRS89 (8) + UTM zone 32N”, ~0.9 m</span></li><li class="ok"><span class="tick">✔</span>Saved to <code>iris_staging.compensation_sites</code> in one transaction <span class="muted">— 0 added, 0 updated, 6 unchanged</span></li></ol>
+
+  <h2>Map of accepted sites</h2>
+  <p class="legend muted"><span style="background:var(--valid)"></span>valid<span style="background:var(--repaired)"></span>repaired
+    — click a site for its details. Rejected features are not drawn; they are listed below.</p>
+  <div id="map"></div>
+
+  <h2>Rejected features (6)</h2>
+  <div class="scroll"><table><thead><tr><th>Source id</th><th>Code</th><th>Meaning</th><th>Detail</th></tr></thead><tbody><tr><td>1004</td><td>repair_changes_area</td><td>The shape is broken and repairing it would change its area by more than the allowed limit, so it would invent geometry.</td><td>Self-intersection[2628459.896 5479680.002]; digitised ring area is 0</td></tr><tr><td>1005</td><td>missing_geometry</td><td>The feature has no shape.</td><td></td></tr><tr><td>1006</td><td>non_polygon_geometry</td><td>A point or line in a layer of areas.</td><td>Point</td></tr><tr><td>1007</td><td>outside_state_extent</td><td>Located outside Rhineland-Palatinate.</td><td>representative point outside state bounding box</td></tr><tr><td>1010</td><td>tiny_area</td><td>Smaller than the minimum area (a digitising splinter).</td><td>0.500 m2 &lt; 1.0 m2</td></tr><tr><td>oek_f.noid12</td><td>missing_source_id</td><td>No identifier in the source, so the site could not get a stable key.</td><td>No stable source identifier; a key derived from geometry or attributes would not survive source edits, so the feature is not loaded</td></tr></tbody></table></div>
+
+  <h2>Warnings (accepted with a flag)</h2>
+  <div class="scroll"><table><thead><tr><th>Code</th><th>Count</th><th>Meaning</th></tr></thead><tbody><tr><td>area_mismatch</td><td>1</td><td>The area stated by the source differs from the measured area by more than 5 %.</td></tr><tr><td>duplicate_in_source</td><td>1</td><td>The same site was sent twice; the first copy was kept.</td></tr><tr><td>geometry_repaired</td><td>1</td><td>A small drawing error was repaired (area change within the limit).</td></tr><tr><td>missing_municipality</td><td>1</td><td>The municipality is empty.</td></tr><tr><td>missing_status</td><td>1</td><td>The status is empty; kept as &#x27;unknown&#x27;.</td></tr><tr><td>unmapped_status</td><td>1</td><td>The status value has no configured mapping; kept as &#x27;unmapped&#x27;.</td></tr><tr><td>unparseable_number</td><td>2</td><td>A number field contains text; left empty instead of guessing.</td></tr></tbody></table></div>
+
+  <h2>Accepted sites (6)</h2>
+  <div class="scroll"><table><thead><tr><th>Site</th><th>Name</th><th>Municipality</th><th>Status</th><th>Area m²</th><th>Credits available</th><th>Geometry</th><th>Flags</th></tr></thead><tbody><tr><td>OEK-1001</td><td>Ökokonto Kürenzer Hang</td><td>Trier</td><td>active</td><td>10,000</td><td>100,000</td><td>valid</td><td></td></tr><tr><td>OEK-1002</td><td>Streuobstwiese Moselweiß</td><td>Koblenz</td><td>partially_debited</td><td>7,198</td><td>33,000.50</td><td>valid</td><td>multipart</td></tr><tr><td>OEK-1003</td><td>Auwald Laubenheim</td><td>Mainz</td><td>active</td><td>9,994</td><td>80,000</td><td>repaired</td><td>repaired:Self-intersection</td></tr><tr><td>OEK-1008</td><td>Magerrasen am Kuhberg</td><td>Bad Kreuznach</td><td>unmapped</td><td>9,996</td><td></td><td>valid</td><td>missing_credits_available, unmapped_status, unparseable_number:credits_total</td></tr><tr><td>OEK-1009</td><td>Feuchtwiese ohne Gemeinde</td><td></td><td>unknown</td><td>9,998</td><td></td><td>valid</td><td>missing_credits_available, missing_credits_debited, missing_credits_total, missing_municipality, missing_status, unparseable_number:source_area</td></tr><tr><td>OEK-1011</td><td>Rheinauen mit Insel</td><td>Speyer</td><td>fully_debited</td><td>9,593</td><td>0</td><td>valid</td><td>area_mismatch, dropped_z</td></tr></tbody></table></div>
+
+  <h2>Attribute mapping</h2>
+  <div class="scroll"><table><thead><tr><th>Target column</th><th>Source attribute (checked against DescribeFeatureType)</th></tr></thead><tbody><tr><td>source_id</td><td>oek_id (string)</td></tr><tr><td>site_name</td><td>oek_name (string)</td></tr><tr><td>municipality_name</td><td>gemeinde (string)</td></tr><tr><td>municipality_code</td><td>gemeinde_schluessel (string)</td></tr><tr><td>cadastral_district_name</td><td>gemarkung (string)</td></tr><tr><td>cadastral_district_code</td><td>gemarkung_nr (string)</td></tr><tr><td>cadastral_parcel_refs</td><td>flurstuecke (string)</td></tr><tr><td>compensation_status</td><td>status (string)</td></tr><tr><td>source_area</td><td>flaeche_m2 (string)</td></tr><tr><td>credits_total</td><td>oekopunkte_gesamt (string)</td></tr><tr><td>credits_debited</td><td>oekopunkte_abgebucht (string)</td></tr><tr><td>credits_available</td><td>oekopunkte_verfuegbar (string)</td></tr></tbody></table></div>
+
+  <h2>Provenance</h2>
+  <div class="scroll"><table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Source</td><td>LANIS Kompensationsverzeichnis RLP - Oekokonto OEK (fixture)</td></tr><tr><td>Provider</td><td>Struktur- und Genehmigungsdirektion Nord - LANIS-Zentrale</td></tr><tr><td>Endpoint</td><td>https://geodaten.naturschutz.rlp.de/kartendienste_naturschutz/mod_ogc/wfs_getmap.php?mapfile=komon</td></tr><tr><td>Layer</td><td>ms:oek_f</td></tr><tr><td>Licence</td><td>ODbL-1.0 (Open Data Commons Open Database License)</td></tr><tr><td>Requested CRS (kept as geom_source)</td><td>urn:ogc:def:crs:EPSG::31466</td></tr><tr><td>Working CRS</td><td>EPSG:25832</td></tr><tr><td>Transformation</td><td>axis order change (2D) + Inverse of 3-degree Gauss-Kruger zone 2 + DHDN to ETRS89 (8) + UTM zone 32N (~0.9 m)</td></tr><tr><td>Paging advertised</td><td>True</td></tr><tr><td>Features announced (numberMatched)</td><td>13</td></tr></tbody></table></div>
+
+  <footer>Generated by oek-harvester · run 80049fcd-8434-4501-af73-24c87a797ce0 ·
+    map data © OpenStreetMap contributors</footer>
+</main>
+<script type="application/json" id="sites">{"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[6.661384, 49.760883], [6.661372, 49.759984], [6.659984, 49.759992], [6.659997, 49.760891], [6.661384, 49.760883]]]}, "properties": {"Site": "OEK-1001", "Name": "Ökokonto Kürenzer Hang", "Municipality": "Trier", "Municipality key": "07211000", "Cadastral district": "Kürenz", "Status": "active (source: eingerichtet)", "Area m²": "10,000", "Credits total / available": "120,000 / 100,000", "Geometry": "valid", "Flags": null, "_outcome": "valid"}}, {"type": "Feature", "geometry": {"type": "MultiPolygon", "coordinates": [[[[7.580846, 50.350526], [7.580828, 50.349987], [7.579986, 50.349999], [7.580003, 50.350538], [7.580846, 50.350526]]], [[[7.583655, 50.350488], [7.583637, 50.349949], [7.582795, 50.34996], [7.582812, 50.3505], [7.583655, 50.350488]]]]}, "properties": {"Site": "OEK-1002", "Name": "Streuobstwiese Moselweiß", "Municipality": "Koblenz", "Municipality key": "07111000", "Cadastral district": "Moselweiß", "Status": "partially_debited (source: Teilweise abgebucht)", "Area m²": "7,198", "Credits total / available": "45,000.50 / 33,000.50", "Geometry": "valid", "Flags": "multipart", "_outcome": "valid"}}, {"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[8.249992, 49.979998], [8.250034, 49.980896], [8.250737, 49.980887], [8.251427, 49.980869], [8.251385, 49.979971], [8.249992, 49.979998]], [[8.25073, 49.980874], [8.250735, 49.980882], [8.25073, 49.980883], [8.25073, 49.980874]]]}, "properties": {"Site": "OEK-1003", "Name": "Auwald Laubenheim", "Municipality": "Mainz", "Municipality key": "07315000", "Cadastral district": "Laubenheim", "Status": "active (source: eingerichtet)", "Area m²": "9,994", "Credits total / available": "80,000 / 80,000", "Geometry": "repaired", "Flags": "repaired:Self-intersection", "_outcome": "repaired"}}, {"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[7.871415, 49.840872], [7.871381, 49.839973], [7.869991, 49.839996], [7.870026, 49.840894], [7.871415, 49.840872]]]}, "properties": {"Site": "OEK-1008", "Name": "Magerrasen am Kuhberg", "Municipality": "Bad Kreuznach", "Municipality key": "07133006", "Cadastral district": "BAD KREUZNACH", "Status": "unmapped (source: in Prüfung)", "Area m²": "9,996", "Credits total / available": null, "Geometry": "valid", "Flags": "missing_credits_available, unmapped_status, unparseable_number:credits_total", "_outcome": "valid"}}, {"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[7.301395, 49.580876], [7.301371, 49.579977], [7.299989, 49.579993], [7.300013, 49.580891], [7.301395, 49.580876]]]}, "properties": {"Site": "OEK-1009", "Name": "Feuchtwiese ohne Gemeinde", "Municipality": null, "Municipality key": null, "Cadastral district": null, "Status": "unknown", "Area m²": "9,998", "Credits total / available": null, "Geometry": "valid", "Flags": "missing_credits_available, missing_credits_debited, missing_credits_total, missing_municipality, missing_status, unparseable_number:source_area", "_outcome": "valid"}}, {"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[8.431415, 49.320864], [8.431371, 49.319966], [8.429997, 49.319995], [8.430041, 49.320893], [8.431415, 49.320864]], [[8.430848, 49.320516], [8.430573, 49.320522], [8.430564, 49.320343], [8.430839, 49.320337], [8.430848, 49.320516]]]}, "properties": {"Site": "OEK-1011", "Name": "Rheinauen mit Insel", "Municipality": "Speyer", "Municipality key": "07318000", "Cadastral district": "Speyer", "Status": "fully_debited (source: vollständig abgebucht)", "Area m²": "9,593", "Credits total / available": "50,000 / 0", "Geometry": "valid", "Flags": "area_mismatch, dropped_z", "_outcome": "valid"}}]}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+  const data = JSON.parse(document.getElementById("sites").textContent);
+  const el = document.getElementById("map");
+  if (typeof L === "undefined") {
+    el.textContent = "The map needs internet access (Leaflet and OpenStreetMap tiles). The tables below work offline.";
+  } else {
+    const map = L.map(el);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
+    const colors = { valid: "#2ca02c", repaired: "#1f77b4" };
+    const layer = L.geoJSON(data, {
+      style: f => ({ color: colors[f.properties._outcome] || "#555", weight: 2, fillOpacity: 0.35 }),
+      onEachFeature: (f, lyr) => {
+        const box = document.createElement("div");
+        for (const [k, v] of Object.entries(f.properties)) {
+          if (k.startsWith("_") || v === null) continue;
+          const row = document.createElement("div");
+          const key = document.createElement("b"); key.textContent = k + ": ";
+          row.append(key, document.createTextNode(String(v)));
+          box.append(row);
+        }
+        lyr.bindPopup(box);
+        // Small sites vanish at regional zoom: add a marker at each centre.
+        L.circleMarker(lyr.getBounds().getCenter(), { radius: 6, weight: 2, color: "#fff",
+          fillColor: colors[f.properties._outcome] || "#555", fillOpacity: 0.9 })
+          .bindPopup(box).addTo(map);
+      },
+    }).addTo(map);
+    if (data.features.length) map.fitBounds(layer.getBounds(), { padding: [20, 20], maxZoom: 13 });
+    else map.setView([49.9, 7.4], 7);
+  }
+</script>
+</body>
+</html>

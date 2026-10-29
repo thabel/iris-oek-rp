@@ -69,7 +69,7 @@ Every reject is stored in `iris_staging.harvest_errors` with the full source pro
 | Transactional | A forced mid-load failure leaves the table unchanged and logs `run_failed` (`test_failed_load_rolls_back_and_is_logged`) |
 | Quality issues reported | `harvest_errors` (6 rejects, warnings), `quality_report.md`, `issues.jsonl` per run |
 
-Test suite: **67 passed** (63 unit + 4 PostGIS integration tests against PostGIS 17 / 3.5).
+Test suite: **70 passed** (66 unit + 4 PostGIS integration tests against PostGIS 17 / 3.5). It runs locally, in Docker (`docker compose run --rm tests`), and in GitHub Actions on Python 3.11 and 3.12.
 
 **Live control run (2026-10-28).** The unchanged harvester ran against a working RLP WFS: the water GeoServer, layer `wsg:twsg_rvo`, run with `--no-db` because it is not compensation data.
 - It discovered paging and read the real schema.

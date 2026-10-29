@@ -8,17 +8,20 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN useradd --create-home --uid 10001 harvester
 WORKDIR /app
 
-# Fully pinned dependency set first, for layer caching.
-COPY requirements.txt ./
-RUN pip install -r requirements.txt
+# Fully pinned dependency set first, for layer caching. requirements-dev.txt
+# is requirements.txt plus pytest, so the same image can run the test suite
+# (docker compose run --rm tests).
+COPY requirements.txt requirements-dev.txt ./
+RUN pip install -r requirements-dev.txt
 
 COPY pyproject.toml README.md ./
 COPY src ./src
 RUN pip install --no-deps .
 
-COPY config.example.toml ./
+COPY config.example.toml config.live-control.toml ./
 COPY sql ./sql
-COPY tests/fixtures ./tests/fixtures
+COPY scripts ./scripts
+COPY tests ./tests
 RUN mkdir -p /app/output && chown harvester:harvester /app/output
 
 USER harvester

@@ -1,9 +1,9 @@
 {
-  "run_id": "d1ce6839-961d-4c05-b0ac-c2fe585ccd01",
+  "run_id": "80049fcd-8434-4501-af73-24c87a797ce0",
   "mode": "fixture",
   "status": "succeeded",
-  "started_at": "2026-10-27T22:00:22+00:00",
-  "finished_at": "2026-10-27T22:00:22+00:00",
+  "started_at": "2026-10-29T11:40:30+00:00",
+  "finished_at": "2026-10-29T11:40:30+00:00",
   "error": null,
   "source": {
     "name": "LANIS Kompensationsverzeichnis RLP - Oekokonto OEK (fixture)",
@@ -102,7 +102,7 @@
     {
       "url": "fixture://tests/fixtures/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities",
       "status": 200,
-      "bytes": 4391,
+      "bytes": 4690,
       "elapsed_s": 0.0,
       "error": null
     },

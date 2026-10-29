@@ -1,5 +1,6 @@
-"""Run outputs: JSON run report, Markdown quality report, rejected-feature
-log and a sample export of accepted sites (GeoPackage, EPSG:25832)."""
+"""Run outputs: JSON run report, Markdown quality report, HTML report,
+rejected-feature log and a sample export of accepted sites (GeoPackage,
+EPSG:25832)."""
 
 from __future__ import annotations
 
@@ -12,6 +13,7 @@ import geopandas as gpd
 import shapely
 
 from .config import Config
+from .html_report import render_html_report
 from .pipeline import RunResult
 
 
@@ -65,6 +67,8 @@ def write_outputs(result: RunResult, cfg: Config, out_dir: Path) -> dict[str, Pa
             paths["sample_export"], layer="compensation_sites", driver="GPKG")
 
     paths["quality_report"].write_text(render_quality_report(result, cfg), encoding="utf-8")
+    paths["html_report"] = out_dir / "report.html"
+    paths["html_report"].write_text(render_html_report(result, cfg), encoding="utf-8")
     return paths
 
 

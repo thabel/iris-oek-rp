@@ -4,13 +4,20 @@ The fixtures imitate a MapServer WFS 2.0.0 endpoint for the RLP
 Kompensationsverzeichnis (layer ``ms:oek_f``). What is modelled on the real
 service (from the RLP geoportal registry, checked 2026-10-27):
 
+* service title and abstract, provider SGD-Nord LANIS-Zentrale, licence ODbL
 * layer names ms:eiv_f ... ms:oek_f, title "Oekokonto OEK Flaechen"
-* advertised CRS: EPSG 31466 (default), 31467, 3857, 4326
-* licence ODbL, provider SGD-Nord LANIS-Zentrale
+* advertised CRS: EPSG 31466, 31467, 3857, 4326, and the WGS84 extent
+* MapServer as server software (inferred from the `mapfile=` parameter and
+  the `ms:` prefix, not stated by the provider)
 
-What is SYNTHETIC: the attribute names/types in DescribeFeatureType and all
-feature values. The real schema could not be retrieved (origin returns 404),
-so these must not be read as the real data model.
+ASSUMED (plausible for MapServer WFS 2.0, not verified on the real service):
+* 31466 as the DefaultCRS (the registry lists it first)
+* ImplementsResultPaging TRUE and CountDefault 5000
+* the Fees and AccessConstraints wording, and the outputFormat list
+
+SYNTHETIC: the attribute names/types in DescribeFeatureType and all feature
+values. The real schema could not be retrieved (origin returns 404), so these
+must not be read as the real data model.
 
 Coordinates are written in EPSG axis order for the URN srsName
 (northing, easting), as WFS 2.0 servers do for urn:ogc:def:crs:EPSG::31466.
@@ -226,7 +233,10 @@ def write_capabilities():
       </ows:WGS84BoundingBox>
     </FeatureType>''' for n, t in layers)
     (OUT / "capabilities.xml").write_text(f'''<?xml version="1.0" encoding="UTF-8"?>
-<!-- Fixture modelled on the registered RLP Kompensationsverzeichnis WFS (geoportal.rlp.de id 536). -->
+<!-- Test fixture modelled on the registered RLP Kompensationsverzeichnis WFS (geoportal.rlp.de id 536).
+     Verified from the registry: service title/abstract, provider, layer names and titles, CRS list, extent.
+     ASSUMED, not verified: DefaultCRS choice, ImplementsResultPaging, CountDefault, Fees and
+     AccessConstraints wording, outputFormat list. See tests/fixtures/make_fixtures.py. -->
 <wfs:WFS_Capabilities xmlns:wfs="http://www.opengis.net/wfs/2.0"
     xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:fes="http://www.opengis.net/fes/2.0"
     xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.opengis.net/wfs/2.0" version="2.0.0">

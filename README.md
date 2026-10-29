@@ -1,11 +1,37 @@
 # iris-oek-rp — Rhineland-Palatinate eco-account WFS harvester
 
+[![CI](https://github.com/thabel/iris-oek-rp/actions/workflows/ci.yml/badge.svg)](https://github.com/thabel/iris-oek-rp/actions/workflows/ci.yml)
+
 IRIS task **056 / IRIS-OEK-RP**. A reproducible harvester that reads registered eco-account (Ökokonto) offsetting sites for Rhineland-Palatinate from an OGC WFS and loads them into `iris_staging.compensation_sites` in PostGIS.
 
 > **Status: fixture-based demonstrator.** The endpoint and layer named in the brief do not exist (no DNS record; no `rp_oekokonto` layer). The service that is registered for this data (SGD Nord LANIS *Kompensationsverzeichnis WFS*, layer `ms:oek_f`) returned HTTP 404 on 2026-10-27. Its geoportal WFS proxy is access-controlled, and the geoportal's OGC API – Features proxy returned no data for any documented request on 2026-10-28 (HTTP 500 or empty responses). The live code path is implemented and configured. All compensation results come from fixtures, but the live WFS path itself was validated on a working RLP server: a [live control run](#live-control-run) retrieved 1,412 real polygons. See [docs/discovery.md](docs/discovery.md) for the evidence.
 
+## Quick start (reviewers)
+
+Only Docker is needed. From the repository folder:
+
+```bash
+cp .env.example .env                    # then set any POSTGRES_PASSWORD
+docker compose up --build harvester     # PostGIS + fixture harvest into iris_staging
+```
+
+1. **See the run:** open **`output/fixture/report.html`** in a browser. It shows:
+   - the summary counts;
+   - every request the harvester made;
+   - a map of accepted sites;
+   - the rejected features with the reason.
+2. **Check idempotency:** `docker compose run --rm harvester` again. The report shows 0 added, 0 updated, 6 unchanged.
+3. **Run the test suite:** `docker compose run --rm tests`. All tests pass, including the PostGIS ones.
+4. **Run the validation queries**, no local `psql` needed:
+   - bash: `docker compose exec -T postgis psql -U iris -d iris < sql/validation_queries.sql`
+   - PowerShell: `Get-Content sql/validation_queries.sql | docker compose exec -T postgis psql -U iris -d iris`
+5. **Clean up:** `docker compose down -v`
+
+On Linux, if the container cannot write reports, make the folder writable first: `mkdir -p output && chmod 777 output`. The image runs as a non-root user.
+
 ## Contents
 
+- [Quick start (reviewers)](#quick-start-reviewers)
 - [Data provenance](#data-provenance)
 - [How it works](#how-it-works)
 - [Run it](#run-it)
@@ -45,7 +71,7 @@ per feature: stable key ─► geometry validate / repair / project ─► state
 one transaction (advisory lock per state): upsert sites + log every issue
         │
         ▼
-run_report.json · quality_report.md · issues.jsonl · sample_sites_25832.gpkg
+report.html · run_report.json · quality_report.md · issues.jsonl · sample_sites_25832.gpkg
 ```
 
 - **Controlled requests.** There is a fixed delay between requests, a timeout, and bounded retries with exponential backoff on 429/5xx (honouring `Retry-After`). Other 4xx errors are **not** retried, so access restrictions are reported rather than worked around. A `max_features` guard stops runaway paging, and every request is logged in the run report.
@@ -62,13 +88,16 @@ cp .env.example .env          # set POSTGRES_PASSWORD
 docker compose up --build harvester
 ```
 
-This starts PostGIS 17 / PostGIS 3.5, builds the image (pinned dependencies plus the BETA2007 grid) and runs the fixture harvest into `iris_staging`. Reports are written to `./output/fixture/`. Other commands:
+This starts PostGIS 17 / PostGIS 3.5, builds the image (pinned dependencies plus the BETA2007 grid) and runs the fixture harvest into `iris_staging`. Reports are written to `./output/fixture/`, and `report.html` is the one to open first. Other commands:
 
 ```bash
+docker compose run --rm tests                                             # full test suite
 docker compose run --rm harvester discover --config config.example.toml   # live capability check
 docker compose run --rm harvester harvest --config tests/fixtures/config.fixture.toml --fixtures tests/fixtures/wfs
-psql "postgresql://iris:<password>@localhost:5434/iris" -f sql/validation_queries.sql
+docker compose exec -T postgis psql -U iris -d iris < sql/validation_queries.sql
 ```
+
+The HTML report's map loads Leaflet and OpenStreetMap tiles in the browser, so it needs internet access. The tables work offline.
 
 ### Local (Python 3.11+)
 
@@ -154,9 +183,12 @@ Thresholds are configurable in `[quality]`.
 ## Tests
 
 ```bash
-pytest                                            # 63 unit tests; 4 PostGIS tests skip
-IRIS_TEST_DATABASE_URL=postgresql://... pytest    # all 67; each DB test uses a throwaway schema
+docker compose run --rm tests                     # all 70, in Docker, against the compose PostGIS
+pytest                                            # locally: 66 unit tests; 4 PostGIS tests skip
+IRIS_TEST_DATABASE_URL=postgresql://... pytest    # locally: all 70; each DB test uses a throwaway schema
 ```
+
+GitHub Actions ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs the suite on Python 3.11 and 3.12 against a PostGIS service on every push. It also runs a rerun smoke test and the full `docker compose` path.
 
 | Area | What is tested |
 |---|---|
@@ -165,9 +197,13 @@ IRIS_TEST_DATABASE_URL=postgresql://... pytest    # all 67; each DB test uses a 
 | `test_geometry.py` | projection against an independent 25832 transform, repair vs reject, threshold, tiny/outside/non-polygon, Z, holes of either winding, ellipsoidal area |
 | `test_normalize.py` | NFC/whitespace, casefold keys, German/English numbers, refusal to parse text, status mapping, code formatting |
 | `test_pipeline.py` | end-to-end counts by outcome, exact reject reasons, normalised values, provenance and transformation in report, unadvertised layer, absent mapping, unconfigured status, deterministic hashes |
+| `test_report.py` | all outputs written; HTML report shows counts, the 3 page downloads and every reject reason; map data in WGS84 inside RLP; source values are HTML-escaped |
 | `test_db.py` | re-run inserts 0 / updates 0 / unchanged 6; one changed attribute updates exactly 1 site; valid 25832 geometry, original SRID kept, stored area equals PostGIS geography area; failed load rolls back and is logged |
 
-The fixtures are regenerated by `python tests/fixtures/make_fixtures.py`. Their attribute schema is **synthetic** (see the file header).
+The fixtures are regenerated by `python tests/fixtures/make_fixtures.py`. The file header separates three kinds of content:
+- **verified** from the RLP registry: service, provider, layer names, CRS list, extent;
+- **assumed**: DefaultCRS choice, paging support, `CountDefault`, fees/constraints wording, output formats;
+- **synthetic**: the attribute schema and all feature values.
 
 ## Example results
 
@@ -187,6 +223,7 @@ Output of `sql/validation_queries.sql`: [docs/evidence/validation_queries_output
 
 - **No live data.** All loaded records are fixtures. The real endpoint is unreachable (404) and the protected proxy was deliberately not bypassed.
 - **Unknown real schema.** Attribute mapping, status vocabulary, area units and credit fields are unverified. The live config maps nothing until `discover` has shown the real DescribeFeatureType; raw attributes are always kept.
+- **Assumed service behaviour in the fixtures.** Paging support, `CountDefault` and the fees/constraints text of the fake WFS are plausible MapServer values, not verified on the real service. The harvester itself reads these from the live capabilities and does not depend on the assumed values.
 - **Identifier stability.** `site_id` is only as stable as the source identifier. If the real service only offers MapServer `gml:id`s, confirm that they come from a database key and not from row order.
 - **State membership** uses a padded RLP bounding box plus the AGS prefix, not the exact state boundary. Sites in the bounding-box corners belonging to neighbouring states would only be caught by the AGS check.
 - **Datum accuracy** depends on the BETA2007 grid (present in the Docker image; ~3 m Helmert otherwise). Switching between the two changes stored coordinates by up to a few metres, which shows up as `updated` rows in the next run.
@@ -198,7 +235,9 @@ Output of `sql/validation_queries.sql`: [docs/evidence/validation_queries_output
 
 ```
 src/oek_harvester/   cli · config · wfs (transports, capabilities, paging) · gml (parser)
-                     geometry · normalize · records · db · pipeline · report · sql/schema.sql
+                     geometry · normalize · records · db · pipeline · report · html_report
+                     sql/schema.sql
+.github/workflows/   ci.yml (tests on Python 3.11 and 3.12 + docker compose)
 tests/               unit + PostGIS integration tests; fixtures/ (generator, WFS responses, config)
 sql/                 validation_queries.sql
 scripts/             live_control_compare.py (checks the live control run against native EPSG:25832)

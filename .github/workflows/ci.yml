@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Tests (Python ${{ matrix.python }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12"]
+    services:
+      postgis:
+        image: postgis/postgis:17-3.5
+        env:
+          POSTGRES_DB: iris_test
+          POSTGRES_USER: ci
+          # Throwaway credential for the CI service container only.
+          POSTGRES_PASSWORD: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -h 127.0.0.1 -U ci -d iris_test"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      IRIS_TEST_DATABASE_URL: postgresql://ci:ci@localhost:5432/iris_test
+      IRIS_DATABASE_URL: postgresql://ci:ci@localhost:5432/iris_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install pinned dependencies
+        run: |
+          pip install -r requirements-dev.txt
+          pip install --no-deps -e .
+      - name: Run tests (unit + PostGIS integration)
+        run: python -m pytest -q
+      - name: Fixture harvest, twice (idempotency smoke test)
+        run: |
+          oek-harvester harvest --config tests/fixtures/config.fixture.toml --fixtures tests/fixtures/wfs --output out1
+          oek-harvester harvest --config tests/fixtures/config.fixture.toml --fixtures tests/fixtures/wfs --output out2
+          python -c "import json; c=json.load(open('out2/run_report.json'))['counts']; assert (c['db_inserted'], c['db_updated'], c['db_unchanged']) == (0, 0, 6), c; print('rerun:', c)"
+
+  docker:
+    name: Docker compose (build, harvest, tests)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create .env for this run
+        run: |
+          cp .env.example .env
+          sed -i "s/^POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=$(openssl rand -hex 16)/" .env
+          # The container runs as a non-root user; on Linux the bind-mounted
+          # output folder must be writable for it.
+          mkdir -p output && chmod 777 output
+      - name: Fixture harvest
+        run: |
+          docker compose up --build --abort-on-container-exit --exit-code-from harvester harvester
+          test -s output/fixture/report.html
+      - name: Test suite in the container
+        run: docker compose run --rm tests
+      - name: Tear down
+        if: always()
+        run: docker compose down -v

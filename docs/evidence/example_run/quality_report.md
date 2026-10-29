@@ -1,7 +1,7 @@
 # Quality report — ms:oek_f (RP)
 
-- Run: `d1ce6839-961d-4c05-b0ac-c2fe585ccd01` · mode **fixture** · status **succeeded**
-- Window: 2026-10-27T22:00:22+00:00 → 2026-10-27T22:00:22+00:00
+- Run: `80049fcd-8434-4501-af73-24c87a797ce0` · mode **fixture** · status **succeeded**
+- Window: 2026-10-29T11:40:30+00:00 → 2026-10-29T11:40:30+00:00
 - Source: LANIS Kompensationsverzeichnis RLP - Oekokonto OEK (fixture) — `https://geodaten.naturschutz.rlp.de/kartendienste_naturschutz/mod_ogc/wfs_getmap.php?mapfile=komon` (layer `ms:oek_f`)
 - Licence: ODbL-1.0 (Open Data Commons Open Database License)
 - Request CRS: `urn:ogc:def:crs:EPSG::31466` → stored as `geom_source`; working geometry EPSG:25832
